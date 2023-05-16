@@ -1,0 +1,48 @@
+---
+- name: Ensure Redis container group exists with correct gid.
+  ansible.builtin.group:
+    gid: "{{ redis_gid }}"
+    name: "{{ redis_group }}"
+    state: present
+
+- name: Ensure Redis directories exist.
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: 999
+    group: "{{ redis_gid }}"
+    mode: 0700
+  with_items: "{{ redis_volumes }}"
+
+- name: Pull Redis container image.
+  community.docker.docker_image:
+    name: "{{ redis_server_image }}"
+    source: pull
+    tag: "{{ redis_server_version }}"
+  notify: Remove redis
+
+- name: Ensure all handlers run before continuing
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure Redis container is created.
+  community.docker.docker_container:
+    container_default_behavior: no_defaults
+    detach: true
+    env:
+      REDIS_PASSWORD: "{{ redis_password }}"
+    image: "{{ redis_server_image }}:{{ redis_server_version }}"
+    interactive: false
+    name: "{{ redis_name }}"
+    published_ports: >-
+        {{
+          [ redis_server_port ~ ':6379' ]
+          if redis_server_port_exposed else omit
+        }}
+    restart_policy: always
+    state: present
+    volumes: "{{ redis_volumes_docker }}"
+    user: "0:{{ redis_gid }}"
+  notify: Restart minecraft
+
+- name: Force all notified handlers to run at this point
+  ansible.builtin.meta: flush_handlers

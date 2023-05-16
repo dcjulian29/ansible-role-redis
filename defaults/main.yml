@@ -1,0 +1,14 @@
+---
+redis_data_dir: "/opt/{{ redis_name }}"
+redis_gid: 982
+redis_group: redis
+redis_name: redis
+redis_password: redispw
+redis_server_image: redis
+redis_server_port: 6379
+redis_server_port_exposed: true
+redis_server_version: alpine
+redis_volumes:
+  - "{{ redis_data_dir }}/{{ redis_name }}"
+redis_volumes_docker:
+  - "{{ redis_volumes[0] }}:/data"
