@@ -42,7 +42,7 @@
     state: present
     volumes: "{{ redis_volumes_docker }}"
     user: "0:{{ redis_gid }}"
-  notify: Restart minecraft
+  notify: Restart redis
 
 - name: Force all notified handlers to run at this point
   ansible.builtin.meta: flush_handlers

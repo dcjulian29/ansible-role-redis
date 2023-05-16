@@ -1,5 +1,4 @@
 ---
----
 - name: Remove redis
   ansible.builtin.command: "docker stop {{ redis_name }} && docker rm {{ redis_name }}"
   register: results
