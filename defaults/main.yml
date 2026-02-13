@@ -9,7 +9,7 @@ redis_password: redispw
 redis_port: 6379
 redis_port_exposed: true
 redis_version: 8
-redis_volumes: # []
-  - "{{ redis_data_dir }}/backup:/backup"
+redis_volumes: []
+  # - "{{ redis_data_dir }}/backup:/backup"
 redis_user: redis
 redis_uid: 982
