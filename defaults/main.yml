@@ -3,12 +3,12 @@ redis_data_dir: "/opt/{{ redis_name }}"
 redis_docker_network: []
 redis_gid: 982
 redis_group: redis
+redis_image: redis
 redis_name: redis
 redis_password: redispw
-redis_server_image: redis
-redis_server_port: 6379
-redis_server_port_exposed: true
-redis_server_version: 8
+redis_port: 6379
+redis_port_exposed: true
+redis_version: 8
 redis_volumes:
   - "{{ redis_data_dir }}/{{ redis_name }}"
 redis_volumes_docker:

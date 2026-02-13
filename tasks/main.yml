@@ -23,9 +23,9 @@
 
 - name: Pull Redis container image.
   community.docker.docker_image:
-    name: "{{ redis_server_image }}"
+    name: "{{ redis_image }}"
     source: pull
-    tag: "{{ redis_server_version }}"
+    tag: "{{ redis_version }}"
   notify: Remove redis
 
 - name: Ensure all handlers run before continuing
@@ -42,7 +42,7 @@
     detach: true
     env:
       REDIS_PASSWORD: "{{ redis_password }}"
-    image: "{{ redis_server_image }}:{{ redis_server_version }}"
+    image: "{{ redis_image }}:{{ redis_version }}"
     interactive: false
     name: "{{ redis_name }}"
     networks: >-
