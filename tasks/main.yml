@@ -1,5 +1,5 @@
 ---
-- name: Ensure Redis container group exists with correct gid.
+- name: Ensure Redis container group exists with correct gid
   ansible.builtin.group:
     gid: "{{ redis_gid }}"
     name: "{{ redis_group }}"
@@ -12,7 +12,7 @@
     name: "{{ redis_user }}"
     uid: "{{ redis_uid }}"
 
-- name: Ensure Redis directories exist.
+- name: Ensure Redis directories exist
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -21,7 +21,7 @@
     mode: "0700"
   with_items: "{{ redis_volumes }}"
 
-- name: Pull Redis container image.
+- name: Pull Redis container image
   community.docker.docker_image:
     name: "{{ redis_image }}"
     source: pull
@@ -36,7 +36,7 @@
     name: "{{ redis_docker_network }}"
   when: redis_docker_network | length > 0
 
-- name: Ensure Redis container is created.
+- name: Ensure Redis container is created
   community.docker.docker_container:
     container_default_behavior: no_defaults
     detach: true
