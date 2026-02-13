@@ -14,15 +14,28 @@
 
 - name: Ensure Redis directories exist
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ (item | string).split(':')[0] }}"
     state: directory
-    owner: 999
+    owner: "{{ redis_uid }}"
     group: "{{ redis_gid }}"
     mode: "0700"
-  with_items: "{{ redis_volumes }}"
+  with_items:
+    - "{{ redis_data_dir }}"
+    - "{{ redis_volume_data }}"
+
+- name: Ensure Custom Redis directories exist
+  ansible.builtin.file:
+    path: "{{ (item | string).split(':')[0] }}"
+    state: directory
+    owner: "{{ redis_uid }}"
+    group: "{{ redis_gid }}"
+    mode: "0700"
+  with_items:
+    - "{{ redis_volumes }}"
 
 - name: Pull Redis container image
   community.docker.docker_image:
+    force_source: true
     name: "{{ redis_image }}"
     source: pull
     tag: "{{ redis_version }}"
@@ -35,6 +48,16 @@
   community.docker.docker_network:
     name: "{{ redis_docker_network }}"
   when: redis_docker_network | length > 0
+
+- name: Add Redis docker data volume
+  ansible.builtin.set_fact:
+    d_volumes: "{{ redis_volume_data }}"
+
+- name: Build a list of all remaining custom docker volumes
+  ansible.builtin.set_fact:
+    d_volumes: "{{ d_volumes }}|{{ item }}"
+  with_items: "{{ redis_volumes }}"
+  when: redis_volumes | length > 0
 
 - name: Ensure Redis container is created
   community.docker.docker_container:
@@ -53,7 +76,7 @@
     ports: "{{ redis_port | string + ':6379' if redis_port_exposed else omit }}"
     restart_policy: always
     state: present
-    volumes: "{{ redis_volumes_docker }}"
+    volumes: "{{ d_volumes.split('|') }}"
     user: "0:{{ redis_gid }}"
   notify: Restart redis
 
