@@ -13,3 +13,5 @@ redis_volumes:
   - "{{ redis_data_dir }}/{{ redis_name }}"
 redis_volumes_docker:
   - "{{ redis_volumes[0] }}:/data"
+redis_user: redis
+redis_uid: 982

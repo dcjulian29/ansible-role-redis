@@ -5,6 +5,13 @@
     name: "{{ redis_group }}"
     state: present
 
+- name: Ensure Postgres user exist
+  ansible.builtin.user:
+    create_home: false
+    group: "{{ redis_group }}"
+    name: "{{ redis_user }}"
+    uid: "{{ redis_uid }}"
+
 - name: Ensure Redis directories exist.
   ansible.builtin.file:
     path: "{{ item }}"
