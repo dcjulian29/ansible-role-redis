@@ -1,5 +1,5 @@
 ---
-redis_data_dir: "/opt/{{ redis_name }}"
+redis_data_dir: "/opt/redis"
 redis_docker_network: []
 redis_gid: 982
 redis_group: redis
