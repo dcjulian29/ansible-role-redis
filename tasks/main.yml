@@ -50,11 +50,7 @@
         [ { 'name': redis_docker_network } ]
         if redis_docker_network | length > 0 else omit
       }}
-    published_ports: >-
-        {{
-          [ redis_server_port ~ ':6379' ]
-          if redis_server_port_exposed else omit
-        }}
+    ports: "{{ redis_port | string + ':6379' if redis_port_exposed else omit }}"
     restart_policy: always
     state: present
     volumes: "{{ redis_volumes_docker }}"
