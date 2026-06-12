@@ -1,2 +1,2 @@
 ---
-redis_volume_data: "{{ redis_data_host }}:/data"
+redis_volume_data: "{{ redis_data_dir }}:/data"

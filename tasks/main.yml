@@ -5,7 +5,7 @@
     name: "{{ redis_group }}"
     state: present
 
-- name: Ensure Postgres user exist
+- name: Ensure Redis user exist
   ansible.builtin.user:
     create_home: false
     group: "{{ redis_group }}"
